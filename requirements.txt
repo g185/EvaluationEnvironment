@@ -1,1 +1,2 @@
 yake
+rake-nltk
