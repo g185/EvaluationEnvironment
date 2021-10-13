@@ -1,54 +1,43 @@
+#!/bin/bash
+
 # install python requirements
 echo "installing requirements"
 pip install -r requirements.txt
 
+echo "-- SemEval2010 data --"
+mkdir -p data/SemEval2010
+cd data/SemEval2010
 
-echo "-- Beer data --"
-mkdir -p data/beer
-cd data/beer
+echo "Downloading zip"
+wget wget -q --show-progress https://github.com/LIAAD/KeywordExtractor-Datasets/raw/master/datasets/SemEval2010.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
 
-echo "Downloading test data"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/annotations.json
-
-echo "Downloading word embeddings"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/review+wiki.filtered.200.txt.gz
-
-echo "Downloading combined train/dev data"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.260k.heldout.txt.gz
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.260k.train.txt.gz
-
-echo "Downloading aspect 0 train/dev data"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect0.heldout.txt.gz
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect0.train.txt.gz
-
-echo "Downloading aspect 1 train/dev data"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect1.heldout.txt.gz
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect1.train.txt.gz
-
-echo "Downloading aspect 2 train/dev data"
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect2.heldout.txt.gz
-wget wget -q --show-progress http://people.csail.mit.edu/taolei/beer/reviews.aspect2.train.txt.gz
+echo "Extracting zip"
+unzip SemEval2010.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
 
 cd ..
 cd ..
 
-echo "-- SST --"
-mkdir -p data/sst
-cd data/sst
+echo "-- Inspec data --"
+mkdir -p data/Inspec
+cd data/Inspec
 
-echo "Downloading SST data"
-wget https://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip
-unzip -j trainDevTestTrees_PTB.zip 
+echo "Downloading zip"
+wget wget -q --show-progress https://github.com/LIAAD/KeywordExtractor-Datasets/raw/master/datasets/Inspec.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
 
-echo "Downloading filtered word embeddings"
-wget https://gist.github.com/bastings/b094de2813da58056a05e8e7950d4ad1/raw/3fbd3976199c2b88de2ae62afc0ecc6f15e6f7ce/glove.840B.300d.sst.txt
+echo "Extracting zip"
+unzip Inspec.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
 
 cd ..
 cd ..
 
-echo "-- SNLI --"
-echo "Download SNLI word list"
-mkdir -p data/snli
-cd data/snli
-wget https://gist.github.com/bastings/1c8f40ff7c9a5f3eddc259fea319c332/raw/b205be7f42e99de9047118019c72f01d7880b158/glove.840B.300d.snli.txt
+echo "-- 500N-KPCrowd data --"
+mkdir -p data/500N-KPCrowd
+cd data/500N-KPCrowd
 
+echo "Downloading zip"
+wget wget -q --show-progress https://github.com/LIAAD/KeywordExtractor-Datasets/raw/master/datasets/500N-KPCrowd-v1.1.zip 
+
+echo "Extracting zip"
+unzip -o 500N-KPCrowd-v1.1.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
+
+echo "Setup was successfull!"
