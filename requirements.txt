@@ -1,2 +1,3 @@
 yake
 rake-nltk
+sklearn
