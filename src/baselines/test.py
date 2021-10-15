@@ -11,12 +11,14 @@ def f1_at_k(pred, gold, k = 20):
     fn = len(set(gold) - set(pred))
     precision = tp/(tp + fp)
     recall = tp/(tp + fn)
+    #exception precision and recall == 0
     try:
         f1_score = 2* (precision * recall)/(precision + recall)
     except:
+        print("0", pred, gold)
         return 0.0
     return f1_score
-"""
+
 list_of_texts = []
 filenames = listdir("../../data/SemEval2010/SemEval2010/docsutf8")
 for filename in filenames:
@@ -32,14 +34,25 @@ for filename in filenames:
         list_of_keys.append(stemmed_keys)
 
 Yake_keyword_extractor = Yake_KE()
+Rake_keyword_extractor = Rake_KE()
 list_of_yake_answeres = [Yake_keyword_extractor.extract_stemmed_keywords(k) for k in list_of_texts] #[[(key,val)]]
+#list_of_rake_answeres = [Rake_keyword_extractor.extract_stemmed_keywords(k) for k in list_of_texts] #[[(key,val)]]
 
-print(list_of_yake_answeres[0])
-print(list_of_keys[0])
+mean = 0
+for i, pred in enumerate(list_of_yake_answeres):
+    f1 = f1_at_k(pred, list_of_keys[i], k = 10)
+    mean += f1 
+print(mean/i)
+
 mean = 0
 for i, pred in enumerate(list_of_yake_answeres):
     f1 = f1_at_k(pred, list_of_keys[i], k = 20)
-    print(i, f1)
+    mean += f1 
+print(mean/i)
+"""
+mean = 0
+for i, pred in enumerate(list_of_rake_answeres):
+    f1 = f1_at_k(pred, list_of_keys[i], k = 20)
     mean += f1 
 print(mean/i)
 """

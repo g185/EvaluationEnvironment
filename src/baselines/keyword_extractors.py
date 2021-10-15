@@ -11,12 +11,17 @@ class KeywordExtractor():
     def extract_keywords(self, text: str) -> list:
         pass
 
+    def extract_stemmed_keywords(self, text: str) -> list:
+        pass
+
     def extract_keywords_with_weights(self, text: str) -> list:
         pass
 
 
 class Yake_KE(KeywordExtractor):
     def __init__(self):
+
+
         self.kw_extractor = yake.KeywordExtractor()
         self.stemmer = PorterStemmer()
     
@@ -36,12 +41,18 @@ class Yake_KE(KeywordExtractor):
 
 class Rake_KE(KeywordExtractor):
     def __init__(self):
-        self.kw_extractor = Rake()
+        self.kw_extractor = Rake(max_length=3)
         self.stemmer = PorterStemmer()
+
 
     def extract_keywords(self, text: str) -> list:
         self.kw_extractor.extract_keywords_from_text(text)
+        return self.kw_extractor.get_ranked_phrases()
+
+    def extract_stemmed_keywords(self, text: str) -> list:
+        self.kw_extractor.extract_keywords_from_text(text)
+        return [self.stemmer.stem(k) for k in self.kw_extractor.get_ranked_phrases()]
+    def extract_keywords_with_weights(self, text: str) -> list:
+        self.kw_extractor.extract_keywords_from_text(text)
         return self.kw_extractor.get_ranked_phrases_with_scores()
     
-    def extract_keywords_with_weights(self, text: str) -> list:
-        pass
