@@ -32,8 +32,18 @@ class Yake_KE(KeywordExtractor):
     
     def extract_stemmed_keywords(self, text: str) -> list:
         weighted_keywords = self.kw_extractor.extract_keywords(text)
+
+        stemmed_unweighted_keywords = []
+        for k, v in weighted_keywords:
+            words = k.split()
+            stemmed_words = [self.stemmer.stem(w) for w in words]
+            key = (' ').join(stemmed_words)
+            stemmed_unweighted_keywords.append(key)
+
+        """
         unweighted_keywords = [self.stemmer.stem(key[0]) for key in weighted_keywords]
-        return unweighted_keywords
+        """
+        return stemmed_unweighted_keywords
 
     def extract_keywords_with_weights(self, text: str) -> list:
         return self.kw_extractor.extract_keywords(text)
