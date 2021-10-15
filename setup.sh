@@ -31,8 +31,8 @@ cd ..
 cd ..
 
 echo "-- 500N-KPCrowd data --"
-mkdir -p data/500N-KPCrowd
-cd data/500N-KPCrowd
+mkdir -p data/500N-KPCrowd-v1.1
+cd data/500N-KPCrowd-v1.1
 
 echo "Downloading zip"
 wget wget -q --show-progress https://github.com/LIAAD/KeywordExtractor-Datasets/raw/master/datasets/500N-KPCrowd-v1.1.zip 
