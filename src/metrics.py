@@ -1,5 +1,12 @@
 
-def f1_at_k(pred, gold, k = 20):
+def mean_f1_at_k(list_pred, list_gold, k) -> float:
+    acc = 0
+    for i, pred in enumerate(list_pred):
+        f1 = f1_at_k(pred, list_gold[i], k = k)
+        acc += f1
+    return acc/len(list_pred)
+
+def f1_at_k(pred, gold, k) -> float:
 
     if len(pred) > k:
         pred = pred[:k]
@@ -17,9 +24,9 @@ def f1_at_k(pred, gold, k = 20):
     except:
         return 0.0
     return f1_score
-    
 
-def precision_at_k(pred, gold, k = 20):
+
+def precision_at_k(pred, gold, k) -> float:
 
     if len(pred) > k:
         pred = pred[:k]
@@ -31,7 +38,7 @@ def precision_at_k(pred, gold, k = 20):
     return precision
 
 
-def recall_at_k(pred, gold, k = 20):
+def recall_at_k(pred, gold, k):
 
     if len(pred) > k:
         pred = pred[:k]
@@ -41,3 +48,4 @@ def recall_at_k(pred, gold, k = 20):
 
     recall = tp/(tp + fn)
     return recall
+

@@ -3,17 +3,17 @@ from nltk.stem.porter import *
 
 def read_texts(dataset_name: str) -> list:
     list_of_texts = []
-    filenames = listdir("../../data/" + dataset_name + "/" + dataset_name + "/docsutf8")
+    filenames = listdir("../data/" + dataset_name + "/" + dataset_name + "/docsutf8")
     for filename in filenames:
-        with open("../../data/" + dataset_name + "/" + dataset_name + "/docsutf8/" + filename) as f:
+        with open("../data/" + dataset_name + "/" + dataset_name + "/docsutf8/" + filename) as f:
             list_of_texts.append(f.read())
     return list_of_texts
 
 def read_keywords(dataset_name: str, stemming = False) -> list:
     list_of_keys = []
-    filenames = listdir("../../data/" + dataset_name + "/" + dataset_name + "/keys")
+    filenames = listdir("../data/" + dataset_name + "/" + dataset_name + "/keys")
     for filename in filenames:
-        with open("../../data/" + dataset_name + "/" + dataset_name + "/keys/" + filename) as f:
+        with open("../data/" + dataset_name + "/" + dataset_name + "/keys/" + filename) as f:
             keys = f.read().splitlines()
             if stemming:
                 keys = [stem(k) for k in keys]             
@@ -23,7 +23,7 @@ def read_keywords(dataset_name: str, stemming = False) -> list:
 def read_texts_and_keywords(dataset_name: str, stem_keywords = False):
     return read_texts(dataset_name), read_keywords(dataset_name, stem_keywords)
 
-def stem(text: str, all_words = False) -> str:
+def stem(text: str, all_words = True) -> str:
     stemmer = PorterStemmer()
     if all_words == True:
         words = text.split()
