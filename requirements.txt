@@ -2,3 +2,5 @@ yake
 nltk
 rake-nltk
 sklearn
+git+https://github.com/boudinfl/pke.git
+click --upgrade

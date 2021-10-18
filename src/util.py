@@ -9,6 +9,8 @@ def read_texts(dataset_name: str) -> list:
             list_of_texts.append(f.read())
     return list_of_texts
 
+def read_paths():
+    return None
 def read_keywords(dataset_name: str, stemming = False) -> list:
     list_of_keys = []
     filenames = listdir("../data/" + dataset_name + "/" + dataset_name + "/keys")

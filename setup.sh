@@ -40,4 +40,9 @@ wget wget -q --show-progress https://github.com/LIAAD/KeywordExtractor-Datasets/
 echo "Extracting zip"
 unzip -o 500N-KPCrowd-v1.1.zip | awk 'BEGIN {ORS=" "} {if(NR%10==0)print "."}'
 
+python3 -m nltk.downloader stopwords
+python3 -m nltk.downloader punkt
+python3 -m nltk.downloader universal_tagset
+python3 -m spacy download en_core_web_sm # download the english model
+
 echo "Setup was successfull!"

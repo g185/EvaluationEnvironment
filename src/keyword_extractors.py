@@ -2,12 +2,11 @@
 from abc import abstractmethod
 import yake
 from rake_nltk import Rake
-
+import pke
+from nltk.corpus import stopwords
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
 from nltk.stem.porter import *
-
+import time
 from util import * 
 
 
@@ -38,6 +37,31 @@ class Yake_KE(KeywordExtractor):
             weighted_keywords = [(stem(k[0]), k[1]) for k in weighted_keywords]
         return weighted_keywords
     
+
+class Yake_pke_KE(KeywordExtractor):
+    def __init__(self):
+        self.kw_extractor = pke.unsupervised.YAKE()
+        self.stoplist = stopwords.words('english')
+        self.stemmer = PorterStemmer()
+    
+    def extract_keywords(self, text: str, stemming = False) -> list:
+        self.kw_extractor.load_document(input=text, language='en', normalization=None)
+        self.kw_extractor.candidate_selection(n=3, stopwords = self.stoplist)
+        self.kw_extractor.candidate_weighting(window=1, stoplist=self.stoplist, use_stems = False)
+        weighted_keywords = self.kw_extractor.get_n_best(n = 20)
+        unweighted_keywords = [key[0] for key in weighted_keywords]
+        if stemming:
+            unweighted_keywords = [stem(k) for k in unweighted_keywords]
+        return unweighted_keywords
+    
+    def extract_keywords_with_weights(self, text: str, stemming = False) -> list:
+        self.kw_extractor.load_document(input=text, language='en', normalization=None)
+        self.kw_extractor.candidate_selection(n=3, stopwords = self.stoplist)
+        self.kw_extractor.candidate_weighting(window=1, stoplist=self.stoplist, use_stems = False)
+        weighted_keywords = self.kw_extractor.get_n_best(n = 20)
+        if stemming: 
+            weighted_keywords = [(stem(k[0]), k[1]) for k in weighted_keywords]
+        return weighted_keywords
 
 class Rake_KE(KeywordExtractor):
     def __init__(self):
