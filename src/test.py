@@ -27,7 +27,7 @@ tuple = []
 for t in list_of_texts:
     if len(tuple) == 2:
         list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
-        tuple = []
+        tuple = [] 
     tuple.append(t)
 list_of_yake_answeres = [item for sublist in list_of_yake_answeres for item in sublist]
 print(len(list_of_texts),len(list_of_yake_answeres), len(list_of_keys))
