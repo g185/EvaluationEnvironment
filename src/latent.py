@@ -421,7 +421,7 @@ class IndependentLatentModel(nn.Module):
     
     def forward(self, x):
         h = x
-        z_dist = self.z_layer(h).cuda()
+        z_dist = self.z_layer(h)
         pdf0 = z_dist.pdf(0.)
         
         pdf0 = pdf0.squeeze(-1)
