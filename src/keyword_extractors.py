@@ -48,7 +48,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         pdf1 = self.kw_extractor(ids, am)
         print(pdf1)
         keys_one_hot = (pdf1 > 0.5)
-        keywords = set(self.tokenizer.decode(ids[keys_one_hot]))
+        keywords = self.tokenizer.decode(ids[keys_one_hot])
         print(keywords)
         if stemming:
             keywords = [stem(k) for k in keywords]
