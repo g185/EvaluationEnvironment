@@ -30,7 +30,7 @@ for t in list_of_texts:
         tuple = []
     tuple.append(t)
 list_of_yake_answeres = [item for sublist in list_of_yake_answeres for item in sublist]
-print(len(texts),len(list_of_yake_answeres), len(list_of_keys))
+print(len(list_of_texts),len(list_of_yake_answeres), len(list_of_keys))
 print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
 
 """
