@@ -14,7 +14,7 @@ def parse_args():
 args = parse_args()
 stemming = args.stem
 k = args.k
-
+ 
 list_of_texts, list_of_keys = read_texts_and_keywords(dataset_name=args.dataset_name, stem_keywords=stemming)
 print(list_of_texts[0], list_of_keys[0])
 
