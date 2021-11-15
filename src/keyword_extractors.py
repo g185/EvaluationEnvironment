@@ -54,7 +54,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
                 keys = [stem(k) for k in keys]
             res.append(keys)
         print(res)
-        return keywords
+        return res
     
     def extract_keywords_with_weights(self, text: str, stemming = False) -> list:
         weighted_keywords = self.kw_extractor.extract_keywords(text)
