@@ -19,7 +19,18 @@ list_of_texts, list_of_keys = read_texts_and_keywords(dataset_name=args.dataset_
 print(list_of_texts[0], list_of_keys[0])
 
 Yake_keyword_extractor = BartextraggoEncoder_KE("../nextraggo/experiments/pretrain/pretrain_15-11-2021_00-00-00-v1.ckpt")
+"""
 list_of_yake_answeres = [Yake_keyword_extractor.extract_keywords(k, stemming = stemming) for k in list_of_texts] #[[(key,val)]]
+"""
+list_of_yake_answeres = []
+tuple = []
+for k in list_of_texts:
+    if len(tuple) == 0:
+        tuple.append(k)
+    elif len(tuple) == 1:
+        tuple.append(k)
+    else:
+        list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
 
 print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
 

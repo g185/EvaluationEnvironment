@@ -41,13 +41,14 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         self.tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
         self.stemmer = PorterStemmer()
     
-    def extract_keywords(self, text: str, stemming = False) -> list:
+    def extract_keywords(self, texts: str, stemming = False) -> list:
         
-        ids = torch.tensor(self.tokenizer(text, padding= True, truncation= True)["input_ids"])
-        am = torch.tensor(self.tokenizer(text, padding= True, truncation= True)["attention_mask"])
+        ids = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["input_ids"])
+        am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"])
         pdf1 = self.kw_extractor(ids, am)
         keys_one_hot = (pdf1 > 0.5)
         keywords = set(self.tokenizer.decode(ids[keys_one_hot]))
+        print(keywords)
         if stemming:
             keywords = [stem(k) for k in keywords]
         return keywords
