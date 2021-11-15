@@ -25,15 +25,12 @@ list_of_yake_answeres = [Yake_keyword_extractor.extract_keywords(k, stemming = s
 list_of_yake_answeres = []
 tuple = []
 for t in list_of_texts:
-    if len(tuple) == 0:
-        tuple.append(t)
-    elif len(tuple) == 1:
-        tuple.append(t)
-    else:
+    if len(tuple) == 2:
         list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
         tuple = []
+    tuple.append(t)
 list_of_yake_answeres = [item for sublist in list_of_yake_answeres for item in sublist]
-print(len(list_of_yake_answeres), len(list_of_keys))
+print(len(texts),len(list_of_yake_answeres), len(list_of_keys))
 print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
 
 """
