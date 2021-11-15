@@ -17,6 +17,7 @@ k = args.k
 
 list_of_texts, list_of_keys = read_texts_and_keywords(dataset_name=args.dataset_name, stem_keywords=stemming)
 
+
 Yake_keyword_extractor = Yake_KE()
 list_of_yake_answeres = [Yake_keyword_extractor.extract_keywords(k, stemming = stemming) for k in list_of_texts] #[[(key,val)]]
 

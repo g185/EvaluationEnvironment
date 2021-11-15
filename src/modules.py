@@ -1,3 +1,4 @@
+from torch.nn.modules.loss import MSELoss
 from transformers import BartForConditionalGeneration, AutoConfig, AutoTokenizer
 from torch.optim import Adam, AdamW
 import pytorch_lightning as pl
@@ -13,6 +14,7 @@ class bartextraggo_module(pl.LightningModule):
         super().__init__()
         self.model = bartextraggo_model()
         self.loss_ma = 0
+        self.criterion = MSELoss()
 
     def forward(self, *args, **kwargs):
         return self.model(*args, **kwargs)
@@ -21,10 +23,11 @@ class bartextraggo_module(pl.LightningModule):
         ids = batch['input_ids']
         am = batch["attention_mask"]
         keywords = batch["keywords"]
-        loss, pdf0 = self.model(source = ids, source_padding_mask = am, keywords = keywords)
+        pdf1 = self.model(source = ids, source_padding_mask = am)
+        loss = self.calculate_loss(pdf1, keywords)
         self.loss_ma = 0.99 * self.loss_ma + 0.01 * loss
 
-        y_pred = (pdf0 < 0.5).cpu()
+        y_pred = (pdf1 > 0.5).cpu()
         y_true = (keywords == 1).cpu()
         f1_micro = 0
         f1_macro = 0
@@ -41,13 +44,15 @@ class bartextraggo_module(pl.LightningModule):
         self.log("train_micro_f1", f1_micro, prog_bar=True)
         self.log("train_accuracy", acc, prog_bar=True)
         return loss
+        
 
     def validation_step(self, batch, batch_idx: int):
         ids = batch['input_ids']
         am = batch["attention_mask"]
         keywords = batch["keywords"]
-        loss, pdf0 = self.forward(source = ids, source_padding_mask = am, keywords = keywords)
-        y_pred = (pdf0 < 0.5).cpu()
+        pdf1 = self.forward(source = ids, source_padding_mask = am)
+        loss = self.calculate_loss(pdf1, keywords)
+        y_pred = (pdf1 > 0.5).cpu()
         y_true = (keywords == 1).cpu()
         f1_micro = 0
         f1_macro = 0
@@ -59,15 +64,16 @@ class bartextraggo_module(pl.LightningModule):
         f1_micro = f1_micro/len(y_pred)
         f1_macro = f1_macro/len(y_pred)
         acc = acc/len(y_pred)
-        #self.log("val_macro_f1", f1_macro, prog_bar=True)
-        #self.log("val_micro_f1", f1_micro, prog_bar=True)
-        #self.log("val_accuracy", acc, prog_bar=True)
-        return loss
-
-              
+        return loss 
     
     def configure_optimizers(self):
         return AdamW(self.parameters(), lr=1e-4)
+
+
+        
+    def calculate_loss(self, pdf_1, keywords):
+        info_loss = self.criterion(keywords.squeeze(-1), pdf_1.squeeze(-1))
+        return info_loss
 
 
 class bartextraggo_model(nn.Module):
@@ -107,16 +113,14 @@ class bartextraggo_model(nn.Module):
         self.register_buffer('c0_ma', torch.full((1,), 0.))  # moving average
         self.register_buffer('c1_ma', torch.full((1,), 0.))  # moving average
 
-    def forward(self, source: torch.Tensor, source_padding_mask: torch.Tensor, keywords):
+    def forward(self, source: torch.Tensor, source_padding_mask: torch.Tensor):
         encoder_outputs = self.bart_model.model.encoder(
             input_ids=source,
             attention_mask=source_padding_mask,
             output_hidden_states=True,
             return_dict=True
         ).last_hidden_state
-        k = (keywords == 1).nonzero(as_tuple=True)[1]
-        loss, pdf_zero = self.calculate_loss(encoder_outputs, keywords)
-        return loss, pdf_zero
+        output = self.latent_model(encoder_outputs)
+        
+        return output
 
-    def calculate_loss(self, encoder_outputs, keyword_vector):
-        return self.latent_model(encoder_outputs, keyword_vector)
