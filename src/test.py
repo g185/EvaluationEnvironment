@@ -18,20 +18,23 @@ k = args.k
 list_of_texts, list_of_keys = read_texts_and_keywords(dataset_name=args.dataset_name, stem_keywords=stemming)
 print(list_of_texts[0], list_of_keys[0])
 
-Yake_keyword_extractor = BartextraggoEncoder_KE("../nextraggo/experiments/pretrain/pretrain_15-11-2021_00-00-00-v1.ckpt")
-"""
-list_of_yake_answeres = [Yake_keyword_extractor.extract_keywords(k, stemming = stemming) for k in list_of_texts] #[[(key,val)]]
-"""
+keyword_extractor1 = BartextraggoEncoder_KE("../nextraggo/experiments/pretrain/pretrain_15-11-2021_00-00-00-v1.ckpt")
+keyword_extractor2 = Yake_KE(1)
+
+
 list_of_yake_answeres = []
 tuple = []
 for t in list_of_texts:
     if len(tuple) == 2:
-        list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
+        list_of_yake_answeres.append(keyword_extractor1.extract_keywords(tuple, stemming = stemming))
         tuple = [] 
     tuple.append(t)
 list_of_yake_answeres = [item for sublist in list_of_yake_answeres for item in sublist]
-print(len(list_of_texts),len(list_of_yake_answeres), len(list_of_keys))
-print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
+
+list_of_k2_answeres = [keyword_extractor2.extract_keywords(k, stemming = stemming) for k in list_of_texts] #[[(key,val)]]
+
+print("K1", mean_f1_at_k(list_of_yake_answeres, list_of_keys[:len(list_of_yake_answeres)], k))
+print("K2", mean_f1_at_k(list_of_k2_answeres, list_of_keys, k))
 
 """
 PKE implementation

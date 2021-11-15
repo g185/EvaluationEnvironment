@@ -18,8 +18,8 @@ class KeywordExtractor():
 
 
 class Yake_KE(KeywordExtractor):
-    def __init__(self):
-        self.kw_extractor = yake.KeywordExtractor()
+    def __init__(self, n):
+        self.kw_extractor = yake.KeywordExtractor(n = n)
         self.stemmer = PorterStemmer()
     
     def extract_keywords(self, text: str, stemming = False) -> list:
@@ -45,7 +45,18 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         ids = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["input_ids"]).cuda()
         am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"]).cuda()
         pdf1 = self.kw_extractor(ids, am)
-        keys_one_hot = (pdf1 > 0.9)
+        keys_one_hot = (pdf1 > 0.95)
+        res = []
+        k1 = set(self.tokenizer.decode(ids[0][keys_one_hot[0]]).strip().split(" "))
+        k2 = set(self.tokenizer.decode(ids[1][keys_one_hot[1]]).strip().split(" "))
+        k1 = [key.lower() for key in k1]
+        k2 = [key.lower() for key in k2]
+        if stemming:
+                k1= [stem(k) for k in k1]
+                k2= [stem(k) for k in k2]
+        res.append(k1)
+        res.append(k2)
+        """
         res = []
         for i in range(len(texts)):
             keys = set(self.tokenizer.decode(ids[i][keys_one_hot[i]]).strip().split(" "))
@@ -53,7 +64,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
             if stemming:
                 keys = [stem(k) for k in keys]
             res.append(keys)
-
+        """
         print(res)
         return res
     
