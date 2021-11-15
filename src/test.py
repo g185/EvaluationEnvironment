@@ -33,6 +33,7 @@ for t in list_of_texts:
         list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
         tuple = []
 list_of_yake_answeres = [item for sublist in list_of_yake_answeres for item in sublist]
+print(len(list_of_yake_answeres), len(list_of_keys))
 print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
 
 """
