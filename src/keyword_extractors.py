@@ -46,7 +46,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"]).cuda()
         pdf1 = self.kw_extractor(ids, am)
         keys_one_hot = (pdf1 > 0.5)
-        keywords = self.tokenizer.decode(ids[keys_one_hot])
+        keywords = self.tokenizer.decode(ids[keys_one_hot]).split(" ")
         print(keywords)
         if stemming:
             keywords = [stem(k) for k in keywords]
