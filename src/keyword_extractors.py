@@ -1,14 +1,12 @@
-
-from abc import abstractmethod
 import yake
 from rake_nltk import Rake
 import pke
 from nltk.corpus import stopwords
-import nltk
 from nltk.stem.porter import *
-import time
 from util import * 
-
+from modules import bartextraggo_module
+from transformers import AutoTokenizer
+import torch
 
 class KeywordExtractor():
     
@@ -37,6 +35,46 @@ class Yake_KE(KeywordExtractor):
             weighted_keywords = [(stem(k[0]), k[1]) for k in weighted_keywords]
         return weighted_keywords
     
+class BartextraggoEncoder_KE(KeywordExtractor):
+    def __init__(self, ckpt):
+        self.kw_extractor =  bartextraggo_module().load_from_checkpoint(ckpt).bart_model
+        self.tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
+        self.stemmer = PorterStemmer()
+    
+    def extract_keywords(self, text: str, stemming = False) -> list:
+        
+        ids = torch.tensor(self.tokenizer(text, padding= True, truncation= True)["input_ids"])
+        am = torch.tensor(self.tokenizer(text, padding= True, truncation= True)["attention_mask"])
+        pdf1 = self.kw_extractor(ids, am)
+        keys_one_hot = (pdf1 > 0.5)
+        keywords = set(self.tokenizer.decode(ids[keys_one_hot]))
+        if stemming:
+            keywords = [stem(k) for k in keywords]
+        return keywords
+    
+    def extract_keywords_with_weights(self, text: str, stemming = False) -> list:
+        weighted_keywords = self.kw_extractor.extract_keywords(text)
+        if stemming: 
+            weighted_keywords = [(stem(k[0]), k[1]) for k in weighted_keywords]
+        return weighted_keywords
+
+class Bartextraggo_KE(KeywordExtractor):
+    def __init__(self):
+        self.kw_extractor = yake.KeywordExtractor()
+        self.stemmer = PorterStemmer()
+    
+    def extract_keywords(self, text: str, stemming = False) -> list:
+        weighted_keywords = self.kw_extractor.extract_keywords(text)
+        unweighted_keywords = [key[0] for key in weighted_keywords]
+        if stemming:
+            unweighted_keywords = [stem(k) for k in unweighted_keywords]
+        return unweighted_keywords
+    
+    def extract_keywords_with_weights(self, text: str, stemming = False) -> list:
+        weighted_keywords = self.kw_extractor.extract_keywords(text)
+        if stemming: 
+            weighted_keywords = [(stem(k[0]), k[1]) for k in weighted_keywords]
+        return weighted_keywords
 
 class Yake_pke_KE(KeywordExtractor):
     def __init__(self):

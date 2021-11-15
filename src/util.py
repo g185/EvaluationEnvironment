@@ -3,19 +3,20 @@ from nltk.stem.porter import *
 
 def read_texts(dataset_name: str) -> list:
     list_of_texts = []
-    filenames = listdir("../data/" + dataset_name + "/" + dataset_name + "/docsutf8")
+    filenames = listdir("data/" + dataset_name + "/" + dataset_name + "/docsutf8")
     for filename in filenames:
-        with open("../data/" + dataset_name + "/" + dataset_name + "/docsutf8/" + filename) as f:
+        with open("data/" + dataset_name + "/" + dataset_name + "/docsutf8/" + filename) as f:
             list_of_texts.append(f.read())
     return list_of_texts
 
 def read_paths():
     return None
+    
 def read_keywords(dataset_name: str, stemming = False) -> list:
     list_of_keys = []
-    filenames = listdir("../data/" + dataset_name + "/" + dataset_name + "/keys")
+    filenames = listdir("data/" + dataset_name + "/" + dataset_name + "/keys")
     for filename in filenames:
-        with open("../data/" + dataset_name + "/" + dataset_name + "/keys/" + filename) as f:
+        with open("data/" + dataset_name + "/" + dataset_name + "/keys/" + filename) as f:
             keys = f.read().splitlines()
             if stemming:
                 keys = [stem(k) for k in keys]             
