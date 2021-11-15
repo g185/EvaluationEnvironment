@@ -37,7 +37,7 @@ class Yake_KE(KeywordExtractor):
     
 class BartextraggoEncoder_KE(KeywordExtractor):
     def __init__(self, ckpt):
-        self.kw_extractor =  bartextraggo_module().load_from_checkpoint(ckpt).bart_model
+        self.kw_extractor =  bartextraggo_module().load_from_checkpoint(ckpt).model
         self.tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
         self.stemmer = PorterStemmer()
     
