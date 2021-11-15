@@ -53,6 +53,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
             if stemming:
                 keys = [stem(k) for k in keys]
             res.append(keys)
+        print(texts)
         print(res)
         return res
     
