@@ -425,7 +425,7 @@ class IndependentLatentModel(nn.Module):
         pdf0 = z_dist.pdf(0.)
         
         pdf0 = pdf0.squeeze(-1)
-
+ 
         pdf_1 = 1. - pdf0
 
         return pdf_1
