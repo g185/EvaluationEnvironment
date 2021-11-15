@@ -37,14 +37,14 @@ class Yake_KE(KeywordExtractor):
     
 class BartextraggoEncoder_KE(KeywordExtractor):
     def __init__(self, ckpt):
-        self.kw_extractor =  bartextraggo_module().load_from_checkpoint(ckpt).model
+        self.kw_extractor =  bartextraggo_module().load_from_checkpoint(ckpt).model.cuda()
         self.tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
         self.stemmer = PorterStemmer()
     
     def extract_keywords(self, texts: str, stemming = False) -> list:
         
-        ids = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["input_ids"])
-        am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"])
+        ids = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["input_ids"]).cuda()
+        am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"]),cuda()
         pdf1 = self.kw_extractor(ids, am)
         keys_one_hot = (pdf1 > 0.5)
         keywords = set(self.tokenizer.decode(ids[keys_one_hot]))
