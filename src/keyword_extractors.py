@@ -42,10 +42,11 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         self.stemmer = PorterStemmer()
     
     def extract_keywords(self, texts: str, stemming = False) -> list:
-        
+        print(texts)
         ids = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["input_ids"]).cuda()
         am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"]).cuda()
         pdf1 = self.kw_extractor(ids, am)
+        print(pdf1)
         keys_one_hot = (pdf1 > 0.5)
         keywords = set(self.tokenizer.decode(ids[keys_one_hot]))
         print(keywords)
