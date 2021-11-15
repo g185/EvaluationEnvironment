@@ -10,7 +10,7 @@ def parse_args():
     parser.add_argument("-k", type=int, default=10, help="Num sequences")
     # return
     return parser.parse_args()
-
+ 
 args = parse_args()
 stemming = args.stem
 k = args.k
