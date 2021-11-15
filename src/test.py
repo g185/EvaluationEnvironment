@@ -24,11 +24,11 @@ list_of_yake_answeres = [Yake_keyword_extractor.extract_keywords(k, stemming = s
 """
 list_of_yake_answeres = []
 tuple = []
-for k in list_of_texts:
+for t in list_of_texts:
     if len(tuple) == 0:
-        tuple.append(k)
+        tuple.append(t)
     elif len(tuple) == 1:
-        tuple.append(k)
+        tuple.append(t)
     else:
         list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
         tuple = []
