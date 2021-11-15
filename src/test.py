@@ -32,7 +32,7 @@ for t in list_of_texts:
     else:
         list_of_yake_answeres.append(Yake_keyword_extractor.extract_keywords(tuple, stemming = stemming))
         tuple = []
-
+list_of_yake_answeres = [item for sublist in t for item in sublist]
 print(mean_f1_at_k(list_of_yake_answeres, list_of_keys, k))
 
 """

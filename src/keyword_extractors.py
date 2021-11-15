@@ -46,11 +46,14 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         am = torch.tensor(self.tokenizer(texts, padding= True, truncation= True)["attention_mask"]).cuda()
         pdf1 = self.kw_extractor(ids, am)
         keys_one_hot = (pdf1 > 0.5)
-        keywords = set(self.tokenizer.decode(ids[keys_one_hot]).strip().split(" "))
-        keywords = [key.lower() for key in keywords]
-        if stemming:
-            keywords = [stem(k) for k in keywords]
-        print(keywords)
+        res = []
+        for i in range(len(texts)):
+            keys = set(self.tokenizer.decode(ids[i][keys_one_hot[i]]).strip().split(" "))
+            keys = [key.lower() for key in keys]
+            if stemming:
+                keys = [stem(k) for k in keys]
+            res.append(keys)
+        print(res)
         return keywords
     
     def extract_keywords_with_weights(self, text: str, stemming = False) -> list:
