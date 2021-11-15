@@ -49,7 +49,7 @@ class BartextraggoEncoder_KE(KeywordExtractor):
         res = self.process_keywords(ids, texts, keys_one_hot, stemming)
         return res
     
-    def preprocess_keywords(self, texts, ids, keys_one_hot, stemming):
+    def process_keywords(self, texts, ids, keys_one_hot, stemming):
         res = []
         for i in range(len(texts)):
             keys = set(self.tokenizer.decode(ids[i][keys_one_hot[i]]).strip().split(" "))
